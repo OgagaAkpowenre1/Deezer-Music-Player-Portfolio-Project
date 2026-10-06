@@ -1,0 +1,33 @@
+{
+  "chart": {
+    "tracks": {
+      "data": [
+        {
+          "id": 1109731,
+          "title": "Around the World",
+          "duration": 429,
+          "preview": "https://cdns-preview-d.dzcdn.net/stream/c-deda7fac944b147b44b253a38774d952-1.mp3",
+          "artist": {
+            "id": 27,
+            "name": "Daft Punk",
+            "picture_medium": "https://e-cdns-images.dzcdn.net/images/artist/f2bc007eec33e16ee93d4cb08c2fba1f/250x250-000000-80-0-0.jpg"
+          },
+          "album": {
+            "id": 302127,
+            "title": "Homework",
+            "cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/2e018122cb56986277102d2041a592c8/250x250-000000-80-0-0.jpg"
+          }
+        }
+      ]
+    },
+    "artists": {
+      "data": [
+        {
+          "id": 27,
+          "name": "Daft Punk",
+          "picture_medium": "https://e-cdns-images.dzcdn.net/images/artist/f2bc007eec33e16ee93d4cb08c2fba1f/250x250-000000-80-0-0.jpg"
+        }
+      ]
+    }
+  }
+}
