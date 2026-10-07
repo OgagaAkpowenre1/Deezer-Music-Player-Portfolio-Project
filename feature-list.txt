@@ -1,0 +1,15 @@
+-search for songs, artists or charts
+-homepage shows top songs and artists (for a specific chart if possible, assuming charts are like top
+billboard 100 or something) as well as a small minigame where there's a play button that plays 5 seconds
+from a random song and three options to choose from, whether win or lose, once played, select new
+random song and options
+-bottom now playing track
+- Audio DJ / Sound FX Control PanelThe Feature: A subtle drawer in the bottom player providing:
+    Playback speed control ($0.75\times, 1.0\times, 1.25\times, 1.5\times$)
+    Crossfade toggle (smooth 2-second transition between queued tracks)
+    Simple 3-band EQ (Bass, Mid, Treble) using Web Audio API biquad filters.
+-Synced Lyrics
+-Web Audio Visualizer / EQ
+-Debounced Search & Charts
+
+npx vercel dev
