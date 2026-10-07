@@ -13,3 +13,5 @@ random song and options
 -Debounced Search & Charts
 
 npx vercel dev
+
+add now playing bottom bar, then add artist and track pages

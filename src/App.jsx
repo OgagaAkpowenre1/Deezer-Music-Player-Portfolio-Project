@@ -1,18 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import { PlayerProvider } from "./context/PlayerContext";
 import FilterBar from "./components/FilterBar";
 import TrackCard from "./components/TrackCard";
 import ArtistCard from "./components/ArtistCard";
+import BottomPlayer from "./components/BottomPlayer";
 
-export default function App() {
+function MainContent() {
   const [selectedGenre, setSelectedGenre] = useState("0");
   const [data, setData] = useState({ tracks: [], artists: [] });
   const [loading, setLoading] = useState(true);
-  const [currentTrack, setCurrentTrack] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
 
-  const audioRef = useRef(new Audio());
-
-  //Fetch charts when genre tab changes
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
@@ -36,34 +33,8 @@ export default function App() {
     };
   }, [selectedGenre]);
 
-  //Audio preview playback handler
-  const handlePlayTrack = (track) => {
-    if (!track.preview) return;
-
-    if (currentTrack?.id === track.id) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play();
-        setIsPlaying(true);
-      }
-      return;
-    }
-
-    audioRef.current.src = track.preview;
-    audioRef.current.play().then(() => {
-      setCurrentTrack(track);
-      setIsPlaying(true);
-    });
-
-    audioRef.current.onended = () => {
-      setIsPlaying(false);
-    };
-  };
-
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 p-6 md:p-10 font-sans antialiased">
+    <div className="min-h-screen bg-neutral-950 text-neutral-100 p-6 md:p-10 font-sans antialiased pb-28">
       <header className="max-w-6xl mx-auto space-y-4 pb-6 border-b border-neutral-800">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
@@ -80,7 +51,7 @@ export default function App() {
         />
       </header>
 
-      <main className="max-w-6xl mx-auto py-8 space-y-12">
+      <main className="max-w-6xl mx-auto py-8 space-y-12 pb-16">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 animate-pulse">
             {[...Array(10)].map((_, i) => (
@@ -92,26 +63,17 @@ export default function App() {
           </div>
         ) : (
           <>
-            {/* Top 10 Songs */}
             <section className="space-y-4">
               <h2 className="text-lg font-semibold tracking-tight text-neutral-200">
                 Top 10 Songs
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {data.tracks.map((track, idx) => (
-                  <TrackCard
-                    key={track.id}
-                    track={track}
-                    rank={idx + 1}
-                    onPlay={handlePlayTrack}
-                    isCurrentTrack={currentTrack?.id === track.id}
-                    isPlaying={isPlaying}
-                  />
+                  <TrackCard key={track.id} track={track} rank={idx + 1} />
                 ))}
               </div>
             </section>
 
-            {/* Top 10 Artists */}
             <section className="space-y-4 pt-4">
               <h2 className="text-lg font-semibold tracking-tight text-neutral-200">
                 Top 10 Artists
@@ -125,6 +87,16 @@ export default function App() {
           </>
         )}
       </main>
+
+      <BottomPlayer />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <PlayerProvider>
+      <MainContent />
+    </PlayerProvider>
   );
 }
