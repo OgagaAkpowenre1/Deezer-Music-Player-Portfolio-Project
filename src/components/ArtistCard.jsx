@@ -1,6 +1,11 @@
+import { Link } from "react-router-dom";
+
 export default function ArtistCard({ artist, rank }) {
   return (
-    <div className="flex flex-col items-center text-center p-3 rounded-xl bg-neutral-900/40 border border-neutral-800/50 hover:bg-neutral-800/60 hover:border-neutral-700 transition-all duration-200 group">
+    <Link
+      to={`/artist/${artist.id}`}
+      className="flex flex-col items-center text-center p-3 rounded-xl bg-neutral-900/40 border border-neutral-800/50 hover:bg-neutral-800/60 hover:border-neutral-700 transition-all duration-200 group"
+    >
       <div className="relative">
         <img
           src={artist.picture_medium}
@@ -12,9 +17,13 @@ export default function ArtistCard({ artist, rank }) {
           {rank}
         </span>
       </div>
-      <p className="mt-3 text-xs sm:text-sm font-semibold text-neutral-200 truncate w-full group-hover:text-emerald-400 transition-colors">
+      <Link
+        to={`/artist/${artist.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="mt-3 cursor-pointer hover:underline text-xs sm:text-sm font-semibold text-neutral-200 truncate w-full group-hover:text-emerald-400 transition-colors"
+      >
         {artist.name}
-      </p>
-    </div>
+      </Link>
+    </Link>
   );
 }

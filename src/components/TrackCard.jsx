@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { usePlayer } from "../context/PlayerContext";
 
 export default function TrackCard({ track, rank }) {
@@ -26,6 +27,7 @@ export default function TrackCard({ track, rank }) {
           </span>
         )}
 
+        {/* Album Artwork + Play overlay button */}
         <div className="relative w-12 h-12 shrink-0 rounded-lg overflow-hidden bg-neutral-800">
           <img
             src={track.album?.cover_medium || track.artist?.picture_medium}
@@ -46,17 +48,29 @@ export default function TrackCard({ track, rank }) {
           </div>
         </div>
 
+        {/* Text links to Track and Artist pages */}
         <div className="min-w-0">
-          <p
-            className={`font-medium text-sm truncate ${
+          {/* Link to Track Page */}
+          <Link
+            to={`/track/${track.id}`}
+            onClick={(e) => e.stopPropagation()} // Stop parent from triggering playTrack
+            className={`block font-medium text-sm truncate hover:underline ${
               isCurrentTrack ? "text-emerald-400" : "text-neutral-100"
             }`}
           >
             {track.title}
-          </p>
-          <p className="text-xs text-neutral-400 truncate">
-            {track.artist?.name}
-          </p>
+          </Link>
+
+          {/* Link to Artist Page */}
+          {track.artist && (
+            <Link
+              to={`/artist/${track.artist.id}`}
+              onClick={(e) => e.stopPropagation()} // Stop parent from triggering playTrack
+              className="block text-xs text-neutral-400 hover:text-neutral-200 hover:underline truncate"
+            >
+              {track.artist.name}
+            </Link>
+          )}
         </div>
       </div>
 

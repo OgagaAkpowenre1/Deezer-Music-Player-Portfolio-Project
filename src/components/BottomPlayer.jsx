@@ -1,4 +1,5 @@
 import { usePlayer } from "../context/PlayerContext";
+import { Link } from "react-router-dom";
 
 export default function BottomPlayer() {
   const {
@@ -43,12 +44,20 @@ export default function BottomPlayer() {
           </div>
 
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-neutral-100 truncate">
+            <Link
+              to={`/track/${currentTrack.id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="block text-sm font-semibold text-neutral-100 truncate"
+            >
               {currentTrack.title}
-            </p>
-            <p className="text-xs text-neutral-400 truncate">
+            </Link>
+            <Link
+              to={`/track/${currentTrack.artist?.id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="block text-xs text-neutral-400 truncate"
+            >
               {currentTrack.artist?.name}
-            </p>
+            </Link>
           </div>
         </div>
 

@@ -14,4 +14,4 @@ random song and options
 
 npx vercel dev
 
-add now playing bottom bar, then add artist and track pages
+add artist and track pages
