@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import FilterBar from "../components/FilterBar";
 import TrackCard from "../components/TrackCard";
 import ArtistCard from "../components/ArtistCard";
+import TriviaGame from "../components/game/TriviaGame";
 
 export default function HomePage() {
   const [selectedGenre, setSelectedGenre] = useState("0");
@@ -85,6 +86,12 @@ export default function HomePage() {
           </>
         )}
       </main>
+      <div className="space-y-1">
+        {/* Mini-Game Showcase Section */}
+        <section>
+          <TriviaGame />
+        </section>
+      </div>
     </div>
   );
 }
