@@ -1,4 +1,6 @@
-export default function ScoreBoard({ streak, bestStreak, points }) {
+import { Flame } from "lucide-react";
+
+export default function ScoreBoard({ streak, points }) {
   const multiplier =
     streak >= 10
       ? "3.0x"
@@ -8,34 +10,31 @@ export default function ScoreBoard({ streak, bestStreak, points }) {
           ? "1.5x"
           : "1.0x";
 
+  const labelCls =
+    "text-[11px] font-bold uppercase tracking-wider text-sp-sub";
+
   return (
-    <div className="grid grid-cols-3 gap-2 w-full max-w-sm mx-auto p-2 bg-neutral-950/70 border border-neutral-800/80 rounded-2xl">
-      <div className="flex flex-col items-center py-2 px-1">
-        <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">
-          Score
-        </span>
-        <span className="text-lg font-black text-neutral-100 font-mono mt-0.5">
-          {points}
-        </span>
+    <div className="mx-auto grid w-full max-w-sm grid-cols-3 divide-x divide-white/10 rounded-lg bg-white/5 py-3">
+      <div className="flex flex-col items-center gap-1 px-2">
+        <span className={labelCls}>Score</span>
+        <span className="text-2xl font-extrabold tabular-nums">{points}</span>
       </div>
 
-      <div className="flex flex-col items-center py-2 px-1 border-x border-neutral-800/80">
-        <div className="flex items-center gap-1">
-          <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">
-            Streak
-          </span>
-          {streak >= 3 && <span className="text-xs">🔥</span>}
-        </div>
-        <span className="text-lg font-black text-emerald-400 font-mono mt-0.5">
+      <div className="flex flex-col items-center gap-1 px-2">
+        <span className={`${labelCls} flex items-center gap-1`}>
+          Streak
+          {streak >= 3 && (
+            <Flame size={13} className="text-orange-400" fill="currentColor" />
+          )}
+        </span>
+        <span className="text-2xl font-extrabold tabular-nums text-sp-green">
           {streak}
         </span>
       </div>
 
-      <div className="flex flex-col items-center py-2 px-1">
-        <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">
-          Bonus
-        </span>
-        <span className="text-xs font-bold text-amber-400 font-mono mt-1.5">
+      <div className="flex flex-col items-center gap-1 px-2">
+        <span className={labelCls}>Bonus</span>
+        <span className="text-2xl font-extrabold tabular-nums">
           {multiplier}
         </span>
       </div>

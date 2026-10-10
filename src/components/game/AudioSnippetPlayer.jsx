@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Pause, Play, TriangleAlert } from "lucide-react";
 
 export default function AudioSnippetPlayer({
   previewUrl,
@@ -119,32 +120,36 @@ export default function AudioSnippetPlayer({
     }
   };
 
+  const Icon = hasError ? TriangleAlert : isPlaying ? Pause : Play;
+
   return (
-    <div className="flex flex-col items-center gap-4 py-4">
+    <div className="flex flex-col items-center gap-5 py-4">
       <button
         onClick={playSnippet}
         disabled={!previewUrl || hasError}
         aria-label={isPlaying ? "Stop snippet" : "Play 3-second snippet"}
-        className="group relative w-20 h-20 rounded-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-neutral-950 font-black flex items-center justify-center shadow-xl shadow-emerald-500/20 transition-all active:scale-95 cursor-pointer disabled:cursor-not-allowed"
+        className="grid size-20 place-items-center rounded-full bg-sp-green text-black shadow-[0_8px_24px_rgba(30,215,96,0.25)] transition-transform hover:scale-105 hover:bg-sp-green-hover active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
       >
-        <span className="text-2xl transition-transform group-hover:scale-110">
-          {hasError ? "⚠️" : isPlaying ? "❚❚" : "▶"}
-        </span>
+        <Icon
+          size={32}
+          fill={hasError ? "none" : "currentColor"}
+          className={!isPlaying && !hasError ? "ml-1" : ""}
+        />
       </button>
 
-      <div className="flex flex-col items-center gap-1.5 w-52">
-        <div className="w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
+      <div className="flex w-56 flex-col items-center gap-2">
+        <div className="h-1 w-full overflow-hidden rounded-full bg-[#4d4d4d]">
           <div
-            className="h-full bg-emerald-500 transition-none"
+            className="h-full bg-white transition-none"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-[11px] text-neutral-400 font-mono tracking-tight">
+        <span className="text-xs text-sp-sub">
           {hasError
             ? "Track unavailable, skipping..."
             : isPlaying
               ? "Playing 3.0s slice..."
-              : "Click to test snippet"}
+              : "Click to play the snippet"}
         </span>
       </div>
     </div>

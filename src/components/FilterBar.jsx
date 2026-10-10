@@ -9,7 +9,7 @@ export const GENRES = [
 
 export default function FilterBar({ activeId, onChange, disabled }) {
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+    <div className="scrollbar-none flex items-center gap-2 overflow-x-auto">
       {GENRES.map((genre) => {
         const isActive = activeId === genre.id;
         return (
@@ -17,10 +17,10 @@ export default function FilterBar({ activeId, onChange, disabled }) {
             key={genre.id}
             onClick={() => onChange(genre.id)}
             disabled={disabled}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full cursor-pointer whitespace-nowrap transition-all duration-150 border disabled:opacity-50 ${
+            className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 ${
               isActive
-                ? "bg-emerald-500 text-neutral-950 border-emerald-400 shadow-sm"
-                : "bg-neutral-900 text-neutral-300 border-neutral-800 hover:bg-neutral-800 hover:text-white"
+                ? "bg-white text-black"
+                : "bg-white/10 text-white hover:bg-white/20"
             }`}
           >
             {genre.label}

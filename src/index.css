@@ -1,14 +1,162 @@
 @import "tailwindcss";
 
-@keyframes spin-slow {
-    from {
-        transform: rotate(0deg);
-    } 
-    to {
-        transform: rotate(360deg);
-    }
+@theme static {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --color-sp-panel: #121212;
+  --color-sp-card: #181818;
+  --color-sp-hover: #1f1f1f;
+  --color-sp-highlight: #282828;
+  --color-sp-input: #242424;
+  --color-sp-sub: #b3b3b3;
+  --color-sp-muted: #6a6a6a;
+  --color-sp-green: #1ed760;
+  --color-sp-green-hover: #3be477;
+  --color-sp-red: #f3727f;
 }
 
-.animate-spin-slow {
-    animation: spin-slow 12s linear infinite;
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background: #000;
+    color: #fff;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  button:not(:disabled),
+  [role="button"] {
+    cursor: pointer;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Thin Spotify-style scrollbar for the main content panel */
+  .sp-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  }
+
+  /* Seek / volume slider: white fill, turns green on hover, thumb on hover */
+  .sp-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 12px;
+    background: transparent;
+    cursor: pointer;
+    --fill: #fff;
+  }
+  .sp-range:hover {
+    --fill: #1ed760;
+  }
+  .sp-range:focus-visible {
+    outline: none;
+    --fill: #1ed760;
+  }
+  .sp-range::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(
+      to right,
+      var(--fill) var(--pct, 0%),
+      #4d4d4d var(--pct, 0%)
+    );
+  }
+  .sp-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    margin-top: -4px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+  }
+  .sp-range:hover::-webkit-slider-thumb,
+  .sp-range:focus-visible::-webkit-slider-thumb {
+    opacity: 1;
+  }
+  .sp-range::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: #4d4d4d;
+  }
+  .sp-range::-moz-range-progress {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--fill);
+  }
+  .sp-range::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0;
+  }
+  .sp-range:hover::-moz-range-thumb,
+  .sp-range:focus-visible::-moz-range-thumb {
+    opacity: 1;
+  }
+
+  /* "Now playing" equalizer bars shown in track rows */
+  .eq {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    width: 14px;
+    height: 14px;
+  }
+  .eq i {
+    display: block;
+    width: 3px;
+    height: 30%;
+    border-radius: 1px;
+    background: #1ed760;
+    animation: eq-bounce 1s ease-in-out infinite;
+  }
+  .eq i:nth-child(2) {
+    animation-delay: -0.4s;
+  }
+  .eq i:nth-child(3) {
+    animation-delay: -0.8s;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease both;
+  }
+}
+
+@keyframes eq-bounce {
+  0%,
+  100% {
+    height: 30%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

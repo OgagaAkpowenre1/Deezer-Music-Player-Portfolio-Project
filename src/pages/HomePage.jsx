@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 import FilterBar from "../components/FilterBar";
 import TrackCard from "../components/TrackCard";
+import TrackListHeader from "../components/TrackListHeader";
 import ArtistCard from "../components/ArtistCard";
 import TriviaGame from "../components/game/TriviaGame";
+import Page from "../components/Page";
+
+const getGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+};
 
 export default function HomePage() {
   const [selectedGenre, setSelectedGenre] = useState("0");
   const [data, setData] = useState({ tracks: [], artists: [] });
   const [loading, setLoading] = useState(true);
+  const [greeting] = useState(getGreeting);
 
   useEffect(() => {
     let isMounted = true;
@@ -33,51 +43,52 @@ export default function HomePage() {
   }, [selectedGenre]);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 p-6 md:p-10 font-sans antialiased">
-      <header className="max-w-6xl mx-auto space-y-4 pb-6 border-b border-neutral-800">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-            Music Charts
-          </h1>
-          <p className="text-xs md:text-sm text-neutral-400 mt-1">
-            Top 10 tracks and artists updated in real time
-          </p>
-        </div>
+    <Page>
+      <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
+        {greeting}
+      </h1>
+
+      <div className="mt-6">
         <FilterBar
           activeId={selectedGenre}
           onChange={setSelectedGenre}
           disabled={loading}
         />
-      </header>
+      </div>
 
-      <main className="max-w-6xl mx-auto py-8 space-y-12 pb-16">
+      <div className="mt-8 space-y-12">
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 animate-pulse">
-            {[...Array(10)].map((_, i) => (
-              <div
-                key={i}
-                className="h-16 bg-neutral-900 rounded-xl border border-neutral-800"
-              />
-            ))}
+          <div className="animate-pulse space-y-10">
+            <div className="space-y-2">
+              {[...Array(10)].map((_, i) => (
+                <div key={i} className="h-14 rounded-md bg-white/5" />
+              ))}
+            </div>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="aspect-[3/4] rounded-lg bg-white/5" />
+              ))}
+            </div>
           </div>
         ) : (
           <>
-            <section className="space-y-4">
-              <h2 className="text-lg font-semibold tracking-tight text-neutral-200">
+            <section>
+              <h2 className="mb-4 text-2xl font-bold tracking-tight">
                 Top 10 Songs
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <TrackListHeader />
+              <div>
                 {data.tracks.map((track, idx) => (
                   <TrackCard key={track.id} track={track} rank={idx + 1} />
                 ))}
               </div>
             </section>
 
-            <section className="space-y-4 pt-4">
-              <h2 className="text-lg font-semibold tracking-tight text-neutral-200">
+            <section>
+              <h2 className="mb-4 text-2xl font-bold tracking-tight">
                 Top 10 Artists
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-4">
                 {data.artists.map((artist, idx) => (
                   <ArtistCard key={artist.id} artist={artist} rank={idx + 1} />
                 ))}
@@ -85,13 +96,12 @@ export default function HomePage() {
             </section>
           </>
         )}
-      </main>
-      <div className="space-y-1">
+
         {/* Mini-Game Showcase Section */}
         <section>
           <TriviaGame />
         </section>
       </div>
-    </div>
+    </Page>
   );
 }

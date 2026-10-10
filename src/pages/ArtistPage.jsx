@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { Pause, Play } from "lucide-react";
 import TrackCard from "../components/TrackCard";
+import TrackListHeader from "../components/TrackListHeader";
+import AlbumCard from "../components/AlbumCard";
+import Page from "../components/Page";
+import PageMessage from "../components/PageMessage";
+import { usePlayer } from "../context/PlayerContext";
 
 export default function ArtistPage() {
   const { id } = useParams();
   const [artist, setArtist] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { currentTrack, isPlaying, playTrack } = usePlayer();
 
   useEffect(() => {
     setLoading(true);
@@ -16,69 +23,75 @@ export default function ArtistPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading)
-    return <div className="p-8 text-neutral-400">Loading artist...</div>;
+  if (loading) return <PageMessage loading>Loading artist…</PageMessage>;
   if (!artist || artist.error)
-    return <div className="p-8 text-red-400">Artist not found.</div>;
+    return <PageMessage>Artist not found.</PageMessage>;
+
+  const topTracks = artist.topTracks || [];
+  const artistIsCurrent = topTracks.some((t) => t.id === currentTrack?.id);
+  const showPause = artistIsCurrent && isPlaying;
 
   return (
-    <div className="space-y-8">
-      {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-neutral-800">
+    <Page tint="from-[#44397a]/70">
+      {/* Header */}
+      <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-end">
         <img
           src={artist.picture_big}
           alt={artist.name}
-          className="w-36 h-36 sm:w-44 sm:h-44 rounded-full object-cover shadow-xl border border-neutral-700"
+          className="size-48 rounded-full object-cover shadow-[0_8px_40px_rgba(0,0,0,0.6)] md:size-56"
         />
-        <div className="text-center sm:text-left space-y-2">
-          <span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">
-            Artist
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white">
+        <div className="min-w-0 space-y-2 text-center sm:text-left">
+          <span className="text-sm font-bold">Artist</span>
+          <h1 className="break-words text-5xl font-black leading-none tracking-tighter md:text-6xl lg:text-7xl">
             {artist.name}
           </h1>
-          <p className="text-sm text-neutral-400">
-            {Number(artist.nb_fan).toLocaleString()} Fans • {artist.nb_album}{" "}
-            Releases
+          <p className="text-sm text-sp-sub">
+            {Number(artist.nb_fan).toLocaleString()} fans • {artist.nb_album}{" "}
+            releases
           </p>
         </div>
       </div>
 
+      {/* Actions */}
+      <div className="mt-8">
+        <button
+          onClick={() => topTracks[0] && playTrack(topTracks[0])}
+          disabled={!topTracks[0]?.preview}
+          aria-label={showPause ? "Pause" : "Play top track"}
+          className="grid size-14 place-items-center rounded-full bg-sp-green text-black transition-transform hover:scale-105 hover:bg-sp-green-hover active:scale-95 disabled:opacity-40"
+        >
+          {showPause ? (
+            <Pause size={24} fill="currentColor" />
+          ) : (
+            <Play size={24} fill="currentColor" className="ml-0.5" />
+          )}
+        </button>
+      </div>
+
       {/* Popular Tracks */}
-      <section className="space-y-3">
-        <h2 className="text-xl font-bold text-neutral-200">Popular Tracks</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {artist.topTracks?.map((track, i) => (
+      <section className="mt-8">
+        <h2 className="mb-4 text-2xl font-bold tracking-tight">Popular</h2>
+        <TrackListHeader />
+        <div>
+          {topTracks.map((track, i) => (
             <TrackCard key={track.id} track={track} rank={i + 1} />
           ))}
         </div>
       </section>
 
       {/* Albums Discography */}
-      <section className="space-y-4 pt-4">
-        <h2 className="text-xl font-bold text-neutral-200">Discography</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+      <section className="mt-12">
+        <h2 className="mb-4 text-2xl font-bold tracking-tight">Discography</h2>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-4">
           {artist.albums?.map((album) => (
-            <Link
+            <AlbumCard
               key={album.id}
-              to={`/album/${album.id}`}
-              className="group p-3 bg-neutral-900/40 hover:bg-neutral-800/60 rounded-xl border border-neutral-800/60 transition-all flex flex-col items-center text-center"
-            >
-              <img
-                src={album.cover_medium}
-                alt={album.title}
-                className="w-full aspect-square rounded-lg object-cover group-hover:scale-105 transition-transform"
-              />
-              <p className="mt-2 text-sm font-semibold text-neutral-200 truncate w-full">
-                {album.title}
-              </p>
-              <span className="text-xs text-neutral-500">
-                {album.release_date?.slice(0, 4)}
-              </span>
-            </Link>
+              album={album}
+              subtitle={album.release_date?.slice(0, 4)}
+            />
           ))}
         </div>
       </section>
-    </div>
+    </Page>
   );
 }

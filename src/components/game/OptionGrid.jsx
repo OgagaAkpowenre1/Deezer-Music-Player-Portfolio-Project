@@ -1,3 +1,5 @@
+import { Check, Music, X } from "lucide-react";
+
 export default function OptionGrid({
   options,
   onSelect,
@@ -6,24 +8,20 @@ export default function OptionGrid({
   resolved,
 }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl mx-auto">
+    <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2">
       {options.map((track) => {
         const isSelected = selectedId === track.id;
         const isTarget = track.id === targetId;
 
-        let buttonStyle =
-          "bg-neutral-900/80 hover:bg-neutral-800/90 border-neutral-800 text-neutral-200";
+        let buttonStyle = "bg-white/5 hover:bg-white/10 text-white";
 
         if (resolved) {
           if (isTarget) {
-            buttonStyle =
-              "bg-emerald-950/80 border-emerald-500 text-emerald-200 shadow-md shadow-emerald-500/10";
+            buttonStyle = "bg-sp-green/15 text-white ring-1 ring-sp-green";
           } else if (isSelected && !isTarget) {
-            buttonStyle =
-              "bg-rose-950/80 border-rose-500 text-rose-200 shadow-md shadow-rose-500/10";
+            buttonStyle = "bg-sp-red/15 text-white ring-1 ring-sp-red";
           } else {
-            buttonStyle =
-              "bg-neutral-900/40 border-neutral-800/40 text-neutral-600 opacity-60";
+            buttonStyle = "bg-white/5 text-sp-muted opacity-60";
           }
         }
 
@@ -32,39 +30,37 @@ export default function OptionGrid({
             key={track.id}
             onClick={() => !resolved && onSelect(track.id)}
             disabled={resolved}
-            className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all duration-200 cursor-pointer disabled:cursor-default ${buttonStyle}`}
+            className={`flex items-center gap-3 rounded-lg p-3 text-left transition-colors disabled:cursor-default ${buttonStyle}`}
           >
-            {/* Show cover art on resolve; show placeholder note while guessing */}
-            <div className="w-12 h-12 rounded-xl bg-neutral-800 overflow-hidden shrink-0 flex items-center justify-center border border-neutral-700/50">
+            {/* Cover art is revealed on resolve; a note icon stands in while guessing */}
+            <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded bg-sp-highlight text-sp-muted">
               {resolved ? (
                 <img
                   src={
                     track.album?.cover_medium || track.artist?.picture_medium
                   }
                   alt={track.title}
-                  className="w-full h-full object-cover animate-fade-in"
+                  className="animate-fade-in size-full object-cover"
                 />
               ) : (
-                <span className="text-neutral-500 text-xs font-mono font-bold">
-                  ?
-                </span>
+                <Music size={20} />
               )}
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold truncate leading-tight">
+              <p className="truncate text-sm font-bold leading-tight">
                 {track.title}
               </p>
-              <p className="text-xs text-neutral-400 truncate mt-0.5">
+              <p className="mt-0.5 truncate text-xs text-sp-sub">
                 {track.artist?.name}
               </p>
             </div>
 
             {resolved && isTarget && (
-              <span className="text-emerald-400 text-sm font-bold pr-1">✓</span>
+              <Check size={20} strokeWidth={3} className="shrink-0 text-sp-green" />
             )}
             {resolved && isSelected && !isTarget && (
-              <span className="text-rose-400 text-sm font-bold pr-1">✕</span>
+              <X size={20} strokeWidth={3} className="shrink-0 text-sp-red" />
             )}
           </button>
         );

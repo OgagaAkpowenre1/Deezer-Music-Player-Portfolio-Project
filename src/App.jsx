@@ -1,52 +1,55 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
-import { PlayerProvider } from "./context/PlayerContext";
+import { useEffect, useRef, useState } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { PlayerProvider, usePlayer } from "./context/PlayerContext";
 import BottomPlayer from "./components/BottomPlayer";
+import Sidebar from "./components/layout/Sidebar";
+import TopBar from "./components/layout/TopBar";
+import MobileNav from "./components/layout/MobileNav";
 import HomePage from "./pages/HomePage";
 import ArtistPage from "./pages/ArtistPage";
 import AlbumPage from "./pages/AlbumPage";
 import TrackPage from "./pages/TrackPage";
 import SearchPage from "./pages/SearchPage";
 
-function Navigation() {
-  const location = useLocation();
+function Layout() {
+  const { currentTrack } = usePlayer();
+  const { pathname } = useLocation();
+  const mainRef = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Start every page at the top, like Spotify does
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
-    <nav className="border-b border-neutral-800 px-6 py-4">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link
-          to="/"
-          className="text-lg font-black tracking-tight flex items-center gap-2"
-        >
-          <span className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-neutral-950 text-xs font-bold">
-            ▶
-          </span>
-          SoundVault
-        </Link>
+    <div className="flex h-dvh flex-col bg-black text-white">
+      <div
+        className={`flex min-h-0 flex-1 gap-2 p-2 ${
+          currentTrack ? "pb-0 md:pb-0" : ""
+        }`}
+      >
+        <Sidebar />
 
-        <div className="flex items-center gap-4">
-          <Link
-            to="/"
-            className={`text-sm font-medium transition-colors ${
-              location.pathname === "/"
-                ? "text-emerald-400"
-                : "text-neutral-400 hover:text-neutral-200"
-            }`}
-          >
-            Home
-          </Link>
-          <Link
-            to="/search"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-              location.pathname === "/search"
-                ? "bg-neutral-800 text-emerald-400 border border-neutral-700"
-                : "text-neutral-400 hover:text-neutral-200"
-            }`}
-          >
-            <span>🔍</span> Search
-          </Link>
-        </div>
+        <main
+          ref={mainRef}
+          onScroll={(e) => setScrolled(e.currentTarget.scrollTop > 56)}
+          className="sp-scroll relative min-w-0 flex-1 overflow-y-auto rounded-lg bg-sp-panel"
+        >
+          <TopBar scrolled={scrolled} />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/artist/:id" element={<ArtistPage />} />
+            <Route path="/album/:id" element={<AlbumPage />} />
+            <Route path="/track/:id" element={<TrackPage />} />
+          </Routes>
+        </main>
       </div>
-    </nav>
+
+      <BottomPlayer />
+      <MobileNav />
+    </div>
   );
 }
 
@@ -54,21 +57,7 @@ export default function App() {
   return (
     <PlayerProvider>
       <BrowserRouter>
-        <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans antialiased pb-28">
-          <Navigation />
-
-          <main className="max-w-6xl mx-auto p-6 md:p-10">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/artist/:id" element={<ArtistPage />} />
-              <Route path="/album/:id" element={<AlbumPage />} />
-              <Route path="/track/:id" element={<TrackPage />} />
-            </Routes>
-          </main>
-
-          <BottomPlayer />
-        </div>
+        <Layout />
       </BrowserRouter>
     </PlayerProvider>
   );

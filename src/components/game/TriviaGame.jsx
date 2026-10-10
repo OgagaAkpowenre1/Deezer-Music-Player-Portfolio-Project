@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { ArrowRight, Gamepad2, LogOut, Play } from "lucide-react";
 import DifficultyPicker, { DIFFICULTY_CONFIG } from "./DifficultyPicker";
 import ScoreBoard from "./ScoreBoard";
 import AudioSnippetPlayer from "./AudioSnippetPlayer";
@@ -161,47 +162,42 @@ export default function TriviaGame() {
   // -------------------------------------------------------------
   if (!isPlayingGame) {
     return (
-      <div className="w-full bg-gradient-to-b from-neutral-900/80 to-neutral-900/40 border border-neutral-800/80 rounded-3xl p-8 sm:p-12 backdrop-blur-sm text-center space-y-8">
-        <div className="max-w-xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full uppercase tracking-wider">
-            <span>⚡</span> Interactive Minigame
+      <div className="overflow-hidden rounded-lg bg-gradient-to-br from-[#2b2166] via-sp-card to-sp-card p-8 text-center sm:p-12">
+        <div className="mx-auto max-w-xl space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider">
+            <Gamepad2 size={14} /> Minigame
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-neutral-100 tracking-tight">
-            Song Guesser Challenge
+          <h2 className="text-3xl font-black tracking-tight sm:text-5xl">
+            Song Guesser
           </h2>
-          <p className="text-sm text-neutral-400 leading-relaxed">
+          <p className="text-sm leading-relaxed text-sp-sub sm:text-base">
             Listen to a short 3.0-second preview clip and guess the right track.
-            Select your preferred challenge tier below and test your music
-            knowledge.
+            Pick a difficulty and test your music knowledge.
           </p>
         </div>
 
         {/* Difficulty Selection on Title Screen */}
-        <div className="space-y-3">
-          <span className="text-xs font-mono uppercase text-neutral-500 font-bold tracking-widest block">
-            Select Difficulty
-          </span>
+        <div className="mt-8 space-y-3">
           <DifficultyPicker
             activeTier={tier}
             onSelect={(selectedTier) => setTier(selectedTier)}
             disabled={false}
           />
-          <p className="text-xs text-neutral-400 font-mono">
-            Mode:{" "}
-            <span className="text-emerald-400">
+          <p className="text-sm text-sp-sub">
+            <span className="font-bold text-white">
               {DIFFICULTY_CONFIG[tier]?.label}
             </span>{" "}
-            — {DIFFICULTY_CONFIG[tier]?.description}
+            · {DIFFICULTY_CONFIG[tier]?.description}
           </p>
         </div>
 
         {/* Start Game Action Button */}
-        <div>
+        <div className="mt-8">
           <button
             onClick={handleStartGame}
-            className="px-8 py-3.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-black text-base shadow-xl shadow-emerald-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-full bg-sp-green px-8 py-3.5 text-base font-bold text-black transition-transform hover:scale-105 hover:bg-sp-green-hover active:scale-95"
           >
-            Start Game ▶
+            <Play size={18} fill="currentColor" /> Start game
           </button>
         </div>
       </div>
@@ -212,18 +208,18 @@ export default function TriviaGame() {
   // ACTIVE GAMEPLAY SCREEN
   // -------------------------------------------------------------
   return (
-    <div className="w-full bg-neutral-900/50 border border-neutral-800/80 rounded-3xl p-6 sm:p-8 backdrop-blur-sm space-y-6">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-neutral-800/80 pb-5">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-black text-neutral-100 flex items-center gap-2">
-            <span>⚡</span> Song Guesser
+    <div className="space-y-6 rounded-lg bg-sp-card p-5 sm:p-8">
+      <div className="flex flex-col items-center justify-between gap-4 border-b border-white/10 pb-5 sm:flex-row">
+        <div className="text-center sm:text-left">
+          <h2 className="flex items-center justify-center gap-2 text-2xl font-extrabold tracking-tight sm:justify-start">
+            <Gamepad2 size={24} className="text-sp-green" /> Song Guesser
           </h2>
-          <p className="text-xs text-neutral-400 mt-0.5">
+          <p className="mt-0.5 text-sm text-sp-sub">
             Identify the track from a 3.0-second preview
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <DifficultyPicker
             activeTier={tier}
             onSelect={handleTierChange}
@@ -231,9 +227,9 @@ export default function TriviaGame() {
           />
           <button
             onClick={handleQuitGame}
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-neutral-200 border border-neutral-700/60 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:border-white"
           >
-            Quit
+            <LogOut size={14} /> Quit
           </button>
         </div>
       </div>
@@ -241,7 +237,7 @@ export default function TriviaGame() {
       <ScoreBoard streak={streak} bestStreak={bestStreak} points={points} />
 
       {loadingPool && (
-        <div className="py-16 text-center text-sm text-neutral-500 animate-pulse font-mono">
+        <div className="animate-pulse py-16 text-center text-sm text-sp-sub">
           Fetching songs for {DIFFICULTY_CONFIG[tier]?.label || tier}...
         </div>
       )}
@@ -266,9 +262,9 @@ export default function TriviaGame() {
             <div className="flex justify-center pt-2">
               <button
                 onClick={handleNextRound}
-                className="px-6 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-bold text-black transition-transform hover:scale-105 active:scale-95"
               >
-                Next Song →
+                Next song <ArrowRight size={16} />
               </button>
             </div>
           )}

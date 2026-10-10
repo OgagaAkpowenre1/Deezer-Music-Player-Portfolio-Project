@@ -31,13 +31,13 @@ export default function DifficultyPicker({ activeTier, onSelect, disabled }) {
             key={key}
             onClick={() => onSelect(key)}
             disabled={disabled}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all border disabled:opacity-50 cursor-pointer ${
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 ${
               isActive
-                ? "bg-neutral-100 text-neutral-950 border-white shadow-lg"
-                : "bg-neutral-900/60 text-neutral-400 border-neutral-800 hover:bg-neutral-800 hover:text-neutral-200"
+                ? "bg-white text-black"
+                : "bg-white/10 text-white hover:bg-white/20"
             }`}
           >
-            <span>{config.label}</span>
+            {config.label}
           </button>
         );
       })}

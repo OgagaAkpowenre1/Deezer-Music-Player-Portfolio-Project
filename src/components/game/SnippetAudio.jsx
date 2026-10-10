@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Play, Volume2 } from "lucide-react";
 
 export default function SnippetAudio({ previewUrl, duration = 3.0 }) {
   const audioRef = useRef(new Audio());
@@ -45,20 +46,24 @@ export default function SnippetAudio({ previewUrl, duration = 3.0 }) {
       <button
         onClick={playSnippet}
         disabled={isPlaying}
-        className="w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 text-neutral-950 font-bold flex items-center justify-center text-xl shadow-lg transition-transform active:scale-95 cursor-pointer"
+        className="grid size-16 place-items-center rounded-full bg-sp-green text-black shadow-lg transition-transform hover:scale-105 active:scale-95 disabled:opacity-60"
       >
-        {isPlaying ? "🔊" : "▶"}
+        {isPlaying ? (
+          <Volume2 size={26} />
+        ) : (
+          <Play size={26} fill="currentColor" className="ml-0.5" />
+        )}
       </button>
 
       {/* Progress bar showing 0 to 3 seconds */}
-      <div className="w-48 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+      <div className="h-1 w-48 overflow-hidden rounded-full bg-[#4d4d4d]">
         <div
-          className="h-full bg-emerald-500 transition-all duration-100 ease-linear"
+          className="h-full bg-white transition-all duration-100 ease-linear"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <span className="text-xs text-neutral-400 font-mono">
-        {isPlaying ? "Listening (3.0s)..." : "Click to Play Snippet"}
+      <span className="text-xs text-sp-sub">
+        {isPlaying ? "Listening (3.0s)..." : "Click to play snippet"}
       </span>
     </div>
   );
